@@ -1,8 +1,6 @@
-import logo from './logo.png';
-import './App.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
-//import './Popout.js';
+import './App.css';
 
 interface Props {
     title: string;                          // The title of the popout window
@@ -14,7 +12,7 @@ interface State {
     containerElement: HTMLElement | null;   // The root element of the popout window
 }
 
-class Popout extends React.Component<Props, State> {
+export default class Popout extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
@@ -34,7 +32,7 @@ class Popout extends React.Component<Props, State> {
             externalWindow.document.body.appendChild(containerElement);
 
             // Copy the app's styles into the new window
-            const stylesheets = Array.from('./App.css');
+            const stylesheets = Array.from(document.styleSheets);
             stylesheets.forEach(stylesheet => {
                 const css = (stylesheet = CSSStyleSheet);
 
@@ -49,7 +47,7 @@ class Popout extends React.Component<Props, State> {
                         newStyleElement.appendChild(document.createTextNode(rule.cssText));
                     });
                     externalWindow.document.head.appendChild(newStyleElement);
-                };
+                }
             });
 
             externalWindow.document.title = this.props.title;
@@ -58,94 +56,27 @@ class Popout extends React.Component<Props, State> {
             externalWindow.addEventListener('beforeunload', () => {
                 this.props.closeWindow();
             });
-        };
+        }
 
         this.setState({
             externalWindow: externalWindow,
             containerElement: containerElement
         });
-    };
+    }
 
     // Make sure the window closes when the component unmounts
     componentWillUnmount() {
         if (this.state.externalWindow) {
             this.state.externalWindow.close();
-        };
-    };
+        }
+    }
 
     render() {
         if (!this.state.containerElement) {
             return null;
-        };
+        }
 
         // Render this component's children into the root element of the popout window
         return ReactDOM.createPortal(this.props.children, this.state.containerElement);
-    };
-};
-
-export default class App extends Popout {
-  constructor() {
-      super();
-      this.state = {
-          showPopout: false
-      };
-  };
-
-  // This sets the above state variable
-  setPopoutOpen(open: boolean) {
-      this.setState({
-          showPopout: open
-      });
-  };
-
-  // When this component is unloaded, make sure we close the popout
-  componentDidMount() {
-      window.addEventListener('beforeunload', () => {
-          this.setPopoutOpen(false);
-      });
-  };
-
-  // This returns the HTML for the popout, or null if the popout isn't visible
-  getPopout() {
-      if (!this.state.showPopout) {
-          return null;
-      }
-
-      return (
-          <Popout title='Hello world!' closeWindow={() => this.setPopoutOpen(false)}>
-              <div><p>Hello again!</p></div>
-          </Popout>
-      );
-  };
-
-  // Render the popout and a button to show / hide it
-  render() {
-      return (
-          <div classname="App">
-            <header className="App-header">
-              <img src={logo} className="App-logo" alt="logo" />
-              <p></p>
-              {this.getPopout()}
-              <button onClick={() => this.setPopoutOpen(!this.state.showPopout)}>
-                  Hello world!
-              </button>
-            </header>
-          </div>
-      );
-  };
-};
-
-//function App() extends NewPopout { //functions can't extend
-//  render (
-//    <div className="App">
-//      <header className="App-header">
-//        <img src={logo} className="App-logo" alt="logo" />
-//        <button>
-//          Hello world!
-//        </button>
-//      </header>
-//    </div>
-//  );
-//}
-
-//export default App;
+    }
+}
