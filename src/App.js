@@ -14,22 +14,23 @@ export default function App() {
     if (page !== 'Home')
       changeTimer(0);
     if (page == 'Home')
-      currentTimerCount = setInterval(() => {changeTimer(prevTimer => prevTimer + 1)}, 10);
+      currentTimerCount = setInterval(() => {changeTimer(prevTimer => prevTimer + 1)}, (1000 / 60));
       return () => clearInterval(currentTimerCount);
   });
 
-  var timerHours = JSON.stringify(Math.floor(currentTimerCount / (3600 * 100)));
-  var timerMinutes = JSON.stringify(Math.floor(currentTimerCount / (60 * 100)));
-  var timerSeconds = JSON.stringify(Math.floor(currentTimerCount / 100));
-  var timerJiffies = JSON.stringify(currentTimerCount % 100);
+  var timerHours = JSON.stringify(Math.floor((currentTimerCount / (60 * 60 * 60)) % 60));
+  var timerMinutes = JSON.stringify(Math.floor((currentTimerCount / (60 * 60)) % 60));
+  var timerSeconds = JSON.stringify(Math.floor((currentTimerCount / 60) % 60));
+  var timerThirds = JSON.stringify(currentTimerCount % 60);
+  //using thirds instead of deciseconds because it looks neater although the calculation will be slightly less accurate
 
   function PageHome() {
     return (
       <div classname="App">
         <header className="App-header">
           <p><img src={logo} className="App-logo" alt="logo" /></p>
-          <h1>Hello, world. You have been watching this page for:</h1>
-          <p>{timerHours.padStart(2, '0')}:{timerMinutes.padStart(2, '0')}:{timerSeconds.padStart(2, '0')}:{timerJiffies.padStart(2, '0')}</p>
+          <h1>Hello, world.</h1>
+          <p>You have been watching this page for {timerHours.padStart(2, '0')}:{timerMinutes.padStart(2, '0')}:{timerSeconds.padStart(2, '0')}:{timerThirds.padStart(2, '0')}</p>
           <p>
             <button onClick={(() => changePage('About'))}>
               About
@@ -46,11 +47,14 @@ export default function App() {
     return (
       <div classname="App">
         <header className="App-header">
+          <p><img src={logo} className="App-logo" alt="logo" /></p>
           <h1>Help</h1>
           <p>What do you want?</p>
-          <button onClick={(() => changePage('Home'))}>
-            Home
-          </button>
+          <p>
+            <button onClick={(() => changePage('Home'))}>
+              Home
+            </button>
+          </p>
         </header>
       </div>
     )
@@ -59,11 +63,14 @@ export default function App() {
     return (
       <div classname="App">
         <header className="App-header">
+          <p><img src={logo} className="App-logo" alt="logo" /></p>
           <h1>About</h1>
           <p>Fixing Point 2021 is an app developed by Ruben Brett for Blast Theory.</p>
-          <button onClick={(() => changePage('Home'))}>
-            Home
-          </button>
+          <p>
+            <button onClick={(() => changePage('Home'))}>
+              Home
+            </button>
+          </p>
         </header>
       </div>
     );
