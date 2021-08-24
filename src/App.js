@@ -1,5 +1,4 @@
 import logo from './logo.png';
-import landfall from './landfall.jpg';
 import './App.css';
 //import ReactDOM from 'react-dom';
 import React, { useState, useEffect } from 'react';
@@ -13,7 +12,7 @@ export default function App() {
     document.title = `Fixing Point 2021: ${page}`;
     if (page !== 'Home')
       changeTimer(0);
-    if (page == 'Home')
+    if (page === 'Home')
       currentTimerCount = setInterval(() => {changeTimer(prevTimer => prevTimer + 1)}, (1000 / 60));
       return () => clearInterval(currentTimerCount);
   });
@@ -76,11 +75,11 @@ export default function App() {
     );
   }
 
-  if (page == 'Home')
+  if (page === 'Home')
     return PageHome();
-  if (page == 'About')
+  if (page === 'About')
     return PageAbout();
-  if (page == 'Help');
+  if (page === 'Help');
     return PageHelp();
 }
 
