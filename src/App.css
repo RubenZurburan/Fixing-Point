@@ -8,6 +8,11 @@
   pointer-events: none;
 }
 
+.Bear-pic {
+  height: 65vmin;
+  pointer-events: none;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 60s linear;
