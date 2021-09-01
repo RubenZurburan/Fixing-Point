@@ -1,11 +1,14 @@
 import './App.css';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
 import bear1 from './bulgaria-bear-1.jpg';
 import bear2 from './bulgaria-bear-2.jpg';
 import bear3 from './bulgaria-bear-3.jpg';
 //import ReactDOM from 'react-dom';
 import React, { useState, useEffect } from 'react';
+//import './Map.js';
 //import Leaflet from 'leaflet';
-//import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 
 export default function App() {
   const [ page, changePage ] = useState('Home');
@@ -18,8 +21,10 @@ export default function App() {
     return <PageHome navigate={changePage} />;
   if (page === 'About')
     return <PageAbout navigate={changePage} />;
-  if (page === 'Help');
+  if (page === 'Help')
     return <PageHelp navigate={changePage} />;
+  if (page === 'Map')
+    return <PageMap navigate={changePage} />;
 }
 
 function PageHome(props) {
@@ -47,6 +52,9 @@ function PageHome(props) {
           </button>
           <button onClick={(() => props.navigate('Help'))}>
             Help
+          </button>
+          <button onClick={(() => props.navigate('Map'))}>
+            Map
           </button>
         </p>
       </header>
@@ -84,4 +92,26 @@ function PageAbout(props) {
       </header>
     </div>
   );
+}
+function PageMap(props) {
+  return (
+    <div classname="App">
+      <MapContainer id="mapid" center={[51.505, -0.09]} zoom={13} scrollWheelZoom={false}>
+        <TileLayer
+          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <Marker position={[51.505, -0.09]}>
+          <Popup>
+            A pretty CSS3 popup. <br /> Easily customizable.
+          </Popup>
+        </Marker>
+      </MapContainer>
+      <p>
+        <button onClick={(() => props.navigate('Home'))}>
+          Home
+        </button>
+      </p>
+    </div>
+  )
 }

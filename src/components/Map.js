@@ -1,4 +1,6 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 
 export default function MapContainer() {
@@ -13,7 +15,7 @@ export default function MapContainer() {
 
   render() {
     return (
-      <div></div>
+      <div src={myMap}></div>
     )
   }
 }
