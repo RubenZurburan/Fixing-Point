@@ -1,6 +1,40 @@
 .App {
   text-align: center;
-  font-family: 'Helvetica Neue';
+  font-family: 'Pelagiad';
+  background-color: white;
+}
+
+.Map-background {
+  text-align: center;
+  font-family: 'Pelagiad';
+  background-image: url('stained-old-paper.png');
+  background-size: 100%;
+  padding: 30px;
+  margin: 0px;
+  min-height: 92vh;
+}
+
+.Map-popup {
+  text-align: center;
+  font-family: 'Pelagiad';
+  margin: 0px;
+  padding: 0px;
+}
+
+.Map-container {
+  border-radius: 35px;
+  text-align: center;
+  font-family: 'Pelagiad';
+  min-height: 75vh;
+  max-width: 150vh;
+  margin: auto;
+}
+
+.Button-container {
+  text-align: center;
+  font-family: 'Pelagiad';
+  max-height: 10vh;
+  min-height: 5vh;
 }
 
 .App-logo {
@@ -9,12 +43,16 @@
 }
 
 .Bear-pic {
-  height: 65vmin;
+  height: 45vmin;
   pointer-events: none;
 }
 
+.Map-marker-1 {
+  height: 20px
+}
+
 #mapid {
-  height: 800px
+  height: 580px
 }
 
 @media (prefers-reduced-motion: no-preference) {

@@ -1,31 +1,33 @@
 import './App.css';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import bear1 from './bulgaria-bear-1.jpg';
+//import bear1 from './bulgaria-bear-1.jpg';
+import bear1sound from './bulgaria-bear-1.mp3';
+//import bear2sound from './bulgaria-bear-2.mp3';
 import bear2 from './bulgaria-bear-2.jpg';
 import bear3 from './bulgaria-bear-3.jpg';
-//import ReactDOM from 'react-dom';
+import icon from 'leaflet/dist/images/marker-icon.png';
 import React, { useState, useEffect } from 'react';
-//import './Map.js';
-//import Leaflet from 'leaflet';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, ZoomControl } from 'react-leaflet';
 
 export default function App() {
   const [ page, changePage ] = useState('Home');
+  const [ isPlaying, setIsPlaying ] = useState(false);
+  const [ currentAudio, setCurrentAudio ] = useState(new Audio(undefined));
 
   useEffect(() => {
-    document.title = `Fixing Point 2021: ${page}`;
+    document.title = `Fixing Point: ${page}`;
   }, [page]);
 
+  useEffect(() => setIsPlaying(false), [page]);
+
   if (page === 'Home')
-    return <PageHome navigate={changePage} />;
-  if (page === 'About')
-    return <PageAbout navigate={changePage} />;
+    return <PageHome navigate={changePage} page={page} isPlaying={isPlaying} setIsPlaying={setIsPlaying} currentAudio={currentAudio} setCurrentAudio={setCurrentAudio} />;
   if (page === 'Help')
-    return <PageHelp navigate={changePage} />;
-  if (page === 'Map')
-    return <PageMap navigate={changePage} />;
-}
+    return <PageHelp navigate={changePage} page={page} isPlaying={isPlaying} setIsPlaying={setIsPlaying} currentAudio={currentAudio} setCurrentAudio={setCurrentAudio} />;
+  if (page === 'Play')
+    return <PageMap navigate={changePage} page={page} isPlaying={isPlaying} setIsPlaying={setIsPlaying} currentAudio={currentAudio} setCurrentAudio={setCurrentAudio} />;
+};
 
 function PageHome(props) {
   const [ timer, changeTimer ] = useState(0);
@@ -41,77 +43,105 @@ function PageHome(props) {
     }, [timer]);
 
   return (
-    <div classname="App">
-      <header className="App-header">
+    <div className="App">
+      <header className="Map-background">
+        <p>
+          <button className="Button-container" onClick={(() => props.navigate('Help'))}>
+            Help
+          </button>
+          {" "}
+          <button className="Button-container" onClick={(() => props.navigate('Play'))}>
+            Play
+          </button>
+        </p>
         <p><img src={bear2} className="Bear-pic" alt="bear2" /></p>
         <h1>Hello, world.</h1>
         <p>You have been watching this page for {timerHours}:{timerMinutes}:{timerSeconds}:{timerThirds}</p>
-        <p>
-          <button onClick={(() => props.navigate('About'))}>
-            About
-          </button>
-          <button onClick={(() => props.navigate('Help'))}>
-            Help
-          </button>
-          <button onClick={(() => props.navigate('Map'))}>
-            Map
-          </button>
-        </p>
       </header>
     </div>
   );
 }
 function PageHelp(props) {
   return (
-    <div classname="App">
-      <header className="App-header">
-        <p><img src={bear3} className="Bear-pic" alt="bear3" /></p>
-        <h1>Help</h1>
+    <div className="App">
+      <header className="Map-background">
         <p>
-          <button onClick={(() => props.navigate('Home'))}>
+          <button className="Button-container" onClick={(() => props.navigate('Home'))}>
             Home
           </button>
+          {" "}
+          <button className="Button-container" onClick={(() => props.navigate('Play'))}>
+            Play
+          </button>
         </p>
+        <p><img src={bear3} className="Bear-pic" alt="bear3" /></p>
+        <p>To play Fixing Point, navigate to the map page and follow the markers. <br />
+           You need to enable location services in your browser in order to play. <br />
+           The map should centre on your current location. <br />
+           If it doesn't update when you move, check your network connection.</p>
       </header>
     </div>
   )
-}
-function PageAbout(props) {
-
-  return (
-    <div classname="App">
-      <header className="App-header">
-        <p><img src={bear1} className="Bear-pic" alt="bear1" /></p>
-        <h1>About</h1>
-        <p>Fixing Point 2021 is an app developed by Ruben Brett for Blast Theory.</p>
-        <p>
-          <button onClick={(() => props.navigate('Home'))}>
-            Home
-          </button>
-        </p>
-      </header>
-    </div>
-  );
 }
 function PageMap(props) {
+  const [ map, setMap ] = useState(null);
+  const [currentLocation, setCurrentLocation] = useState([51.505, -0.09]);
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      position => setCurrentLocation([position.coords.latitude, position.coords.longitude])
+  )});
+  useEffect(() => { return playPause(props.currentAudio) }, [props.isPlaying]);
+
+  //const bearSound = new Audio(bear1);
+  function playPause(snd) {
+    if (!props.isPlaying) {
+      snd.pause();
+    }
+    if (props.isPlaying) {
+      snd.play();
+    }
+  }
+  function buttonPlayPause() {
+    if (!props.isPlaying) {
+      props.setIsPlaying(true);
+    }
+    if (props.isPlaying) {
+      props.setIsPlaying(false);
+    }
+  }
+
+  const markerIcon = L.icon({
+    iconUrl: icon,
+    iconRetinaUrl: icon,
+    iconAnchor: [5, 55],
+    popupAnchor: [7, -44],
+    iconSize: [24, 41],
+  });
+
   return (
-    <div classname="App">
-      <MapContainer id="mapid" center={[51.505, -0.09]} zoom={13} scrollWheelZoom={false}>
-        <TileLayer
-          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        <Marker position={[51.505, -0.09]}>
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
-        </Marker>
-      </MapContainer>
-      <p>
-        <button onClick={(() => props.navigate('Home'))}>
-          Home
-        </button>
-      </p>
+    <div className="App">
+      <div className="Map-background">
+        <p>
+          <button className="Button-container" onClick={(() => props.navigate('Home'))}>
+            Home
+          </button>
+          {" "}
+          <button className="Button-container" onClick={(() => props.navigate('Help'))}>
+            Help
+          </button>
+        </p>
+        <MapContainer className="Map-container" center={currentLocation} zoom={9} scrollWheelZoom={false} zoomControl={false} whenCreated={map => setMap(map)}>
+          <TileLayer
+            attribution='Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under CC BY SA. . .. '
+            url="https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg"
+          />
+          <ZoomControl position="bottomright" zoomInText="+" zoomOutText="-" />
+          <Marker icon={markerIcon} position={[51.59, -0.09]}> <Popup className="Map-popup"> <button className="Button-container" onClick={() => props.setCurrentAudio(new Audio(bear1sound)) && buttonPlayPause()}> Click to listen </button> </Popup> </Marker>
+          <Marker icon={markerIcon} position={[51.35, -0.57]}> <Popup className="Map-popup"> <button className="Button-container" onClick={(() => props.setCurrentAudio(undefined) && buttonPlayPause())}> Click to listen </button> </Popup> </Marker>
+          <Marker icon={markerIcon} position={[51.103, -0.0838]}> <Popup className="Map-popup"> <button className="Button-container" onClick={(() => undefined)}> Click to listen </button> </Popup> </Marker>
+        </MapContainer>
+      </div>
     </div>
-  )
-}
+  );
+};
