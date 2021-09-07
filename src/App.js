@@ -1,14 +1,15 @@
-import './App.css';
 import 'leaflet/dist/leaflet.css';
+import './App.css';
 import L from 'leaflet';
 //import bear1 from './bulgaria-bear-1.jpg';
 import bear1sound from './bulgaria-bear-1.mp3';
-//import bear2sound from './bulgaria-bear-2.mp3';
+import bear2sound from './bulgaria-bear-2.mp3';
+import bear1 from './bulgaria-bear-1.jpg';
 import bear2 from './bulgaria-bear-2.jpg';
-import bear3 from './bulgaria-bear-3.jpg';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, ZoomControl } from 'react-leaflet';
+//import { listen1, listen2, listen3 } from './Marker.js';
 
 export default function App() {
   const [ page, changePage ] = useState('Home');
@@ -25,7 +26,7 @@ export default function App() {
     return <PageHome navigate={changePage} page={page} isPlaying={isPlaying} setIsPlaying={setIsPlaying} currentAudio={currentAudio} setCurrentAudio={setCurrentAudio} />;
   if (page === 'Help')
     return <PageHelp navigate={changePage} page={page} isPlaying={isPlaying} setIsPlaying={setIsPlaying} currentAudio={currentAudio} setCurrentAudio={setCurrentAudio} />;
-  if (page === 'Play')
+  if (page === 'Map')
     return <PageMap navigate={changePage} page={page} isPlaying={isPlaying} setIsPlaying={setIsPlaying} currentAudio={currentAudio} setCurrentAudio={setCurrentAudio} />;
 };
 
@@ -50,13 +51,13 @@ function PageHome(props) {
             Help
           </button>
           {" "}
-          <button className="Button-container" onClick={(() => props.navigate('Play'))}>
+          <button className="Button-container" onClick={(() => props.navigate('Map'))}>
             Play
           </button>
         </p>
-        <p><img src={bear2} className="Bear-pic" alt="bear2" /></p>
+        <p><img src={bear1} className="Bear-pic" alt="bear2" /></p>
         <h1>Hello, world.</h1>
-        <p>You have been watching this page for {timerHours}:{timerMinutes}:{timerSeconds}:{timerThirds}</p>
+        <p>You have been watching this page for <span className="Helvetica-text">{" "}{timerHours}:{timerMinutes}:{timerSeconds}:{timerThirds}{" "}</span></p>
       </header>
     </div>
   );
@@ -70,11 +71,11 @@ function PageHelp(props) {
             Home
           </button>
           {" "}
-          <button className="Button-container" onClick={(() => props.navigate('Play'))}>
+          <button className="Button-container" onClick={(() => props.navigate('Map'))}>
             Play
           </button>
         </p>
-        <p><img src={bear3} className="Bear-pic" alt="bear3" /></p>
+        <p><img src={bear2} className="Bear-pic" alt="bear3" /></p>
         <p>To play Fixing Point, navigate to the map page and follow the markers. <br />
            You need to enable location services in your browser in order to play. <br />
            The map should centre on your current location. <br />
@@ -131,14 +132,14 @@ function PageMap(props) {
             Help
           </button>
         </p>
-        <MapContainer className="Map-container" center={currentLocation} zoom={9} scrollWheelZoom={false} zoomControl={false} whenCreated={map => setMap(map)}>
+        <MapContainer className="Map-container" center={currentLocation} zoom={15} scrollWheelZoom={false} zoomControl={false} whenCreated={map => setMap(map)}>
           <TileLayer
             attribution='Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under CC BY SA. . .. '
             url="https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg"
           />
           <ZoomControl position="bottomright" zoomInText="+" zoomOutText="-" />
-          <Marker icon={markerIcon} position={[51.59, -0.09]}> <Popup className="Map-popup"> <button className="Button-container" onClick={() => props.setCurrentAudio(new Audio(bear1sound)) && buttonPlayPause()}> Click to listen </button> </Popup> </Marker>
-          <Marker icon={markerIcon} position={[51.35, -0.57]}> <Popup className="Map-popup"> <button className="Button-container" onClick={(() => props.setCurrentAudio(undefined) && buttonPlayPause())}> Click to listen </button> </Popup> </Marker>
+          <Marker icon={markerIcon} position={[51.505, -0.09]}> <Popup className="Map-popup"> <button className="Button-container" onClick={() => props.setCurrentAudio(new Audio(bear1sound)) && buttonPlayPause()}> Click to listen </button> </Popup> </Marker>
+          <Marker icon={markerIcon} position={[51.505, -0.085]}> <Popup className="Map-popup"> <button className="Button-container" onClick={(() => props.setCurrentAudio(new Audio(bear2sound)) && buttonPlayPause())}> Click to listen </button> </Popup> </Marker>
           <Marker icon={markerIcon} position={[51.103, -0.0838]}> <Popup className="Map-popup"> <button className="Button-container" onClick={(() => undefined)}> Click to listen </button> </Popup> </Marker>
         </MapContainer>
       </div>
